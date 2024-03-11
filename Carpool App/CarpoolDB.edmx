@@ -1,0 +1,349 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CarpoolDB.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="CarpoolDBStoreContainer">
+    <EntitySet Name="Users" EntityType="CarpoolDB.Store.Users" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Posts" EntityType="CarpoolDB.Store.Posts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Ratings" EntityType="CarpoolDB.Store.Ratings" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Histories" EntityType="CarpoolDB.Store.Histories" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="UsersPosts" Association="CarpoolDB.Store.UsersPosts">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Posts" EntitySet="Posts" />
+    </AssociationSet>
+    <AssociationSet Name="UsersHistory" Association="CarpoolDB.Store.UsersHistory">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="History" EntitySet="Histories" />
+    </AssociationSet>
+    <AssociationSet Name="HistoryPosts" Association="CarpoolDB.Store.HistoryPosts">
+      <End Role="History" EntitySet="Histories" />
+      <End Role="Posts" EntitySet="Posts" />
+    </AssociationSet>
+    <AssociationSet Name="RatingPosts" Association="CarpoolDB.Store.RatingPosts">
+      <End Role="Rating" EntitySet="Ratings" />
+      <End Role="Posts" EntitySet="Posts" />
+    </AssociationSet>
+    <AssociationSet Name="UsersRating" Association="CarpoolDB.Store.UsersRating">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Rating" EntitySet="Ratings" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Username" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Posts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UsersId" Type="int" Nullable="false" />
+    <Property Name="From" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="To" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Cost" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Departure" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Seats" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Type" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Ratings">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Date" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="RatingNum" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PostsId" Type="int" Nullable="false" />
+    <Property Name="UsersId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Histories">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UsersId" Type="int" Nullable="false" />
+    <Property Name="PostsId" Type="int" Nullable="false" />
+    <Property Name="As" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <Association Name="UsersPosts">
+    <End Role="Users" Type="CarpoolDB.Store.Users" Multiplicity="1" />
+    <End Role="Posts" Type="CarpoolDB.Store.Posts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Posts">
+        <PropertyRef Name="UsersId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UsersHistory">
+    <End Role="Users" Type="CarpoolDB.Store.Users" Multiplicity="1" />
+    <End Role="History" Type="CarpoolDB.Store.Histories" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="History">
+        <PropertyRef Name="UsersId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HistoryPosts">
+    <End Role="History" Type="CarpoolDB.Store.Histories" Multiplicity="*" />
+    <End Role="Posts" Type="CarpoolDB.Store.Posts" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Posts">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="History">
+        <PropertyRef Name="PostsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="RatingPosts">
+    <End Role="Rating" Type="CarpoolDB.Store.Ratings" Multiplicity="*" />
+    <End Role="Posts" Type="CarpoolDB.Store.Posts" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Posts">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Rating">
+        <PropertyRef Name="PostsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UsersRating">
+    <End Role="Users" Type="CarpoolDB.Store.Users" Multiplicity="1" />
+    <End Role="Rating" Type="CarpoolDB.Store.Ratings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Rating">
+        <PropertyRef Name="UsersId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="CarpoolDB" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="CarpoolDBContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="CarpoolDB.Users" />
+          <EntitySet Name="Posts" EntityType="CarpoolDB.Posts" />
+          <AssociationSet Name="UsersPosts" Association="CarpoolDB.UsersPosts">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Posts" EntitySet="Posts" />
+          </AssociationSet>
+          <EntitySet Name="Ratings" EntityType="CarpoolDB.Rating" />
+          <EntitySet Name="Histories" EntityType="CarpoolDB.History" />
+          <AssociationSet Name="UsersHistory" Association="CarpoolDB.UsersHistory">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="History" EntitySet="Histories" />
+          </AssociationSet>
+          <AssociationSet Name="HistoryPosts" Association="CarpoolDB.HistoryPosts">
+            <End Role="History" EntitySet="Histories" />
+            <End Role="Posts" EntitySet="Posts" />
+          </AssociationSet>
+          <AssociationSet Name="RatingPosts" Association="CarpoolDB.RatingPosts">
+            <End Role="Rating" EntitySet="Ratings" />
+            <End Role="Posts" EntitySet="Posts" />
+          </AssociationSet>
+          <AssociationSet Name="UsersRating" Association="CarpoolDB.UsersRating">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Rating" EntitySet="Ratings" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" />
+          <Property Name="Email" Type="String" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" />
+          <NavigationProperty Name="Posts" Relationship="CarpoolDB.UsersPosts" FromRole="Users" ToRole="Posts" />
+          <NavigationProperty Name="Histories" Relationship="CarpoolDB.UsersHistory" FromRole="Users" ToRole="History" />
+          <NavigationProperty Name="Ratings" Relationship="CarpoolDB.UsersRating" FromRole="Users" ToRole="Rating" />
+        </EntityType>
+        <EntityType Name="Posts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="User" Relationship="CarpoolDB.UsersPosts" FromRole="Posts" ToRole="Users" />
+          <Property Name="UsersId" Type="Int32" Nullable="false" />
+          <Property Name="From" Type="String" Nullable="false" />
+          <Property Name="To" Type="String" Nullable="false" />
+          <Property Name="Cost" Type="String" Nullable="false" />
+          <Property Name="Departure" Type="String" Nullable="false" />
+          <Property Name="Seats" Type="String" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" />
+          <NavigationProperty Name="Histories" Relationship="CarpoolDB.HistoryPosts" FromRole="Posts" ToRole="History" />
+          <NavigationProperty Name="Ratings" Relationship="CarpoolDB.RatingPosts" FromRole="Posts" ToRole="Rating" />
+        </EntityType>
+        <Association Name="UsersPosts">
+          <End Type="CarpoolDB.Users" Role="Users" Multiplicity="1" />
+          <End Type="CarpoolDB.Posts" Role="Posts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Posts">
+              <PropertyRef Name="UsersId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Rating">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="String" Nullable="false" />
+          <Property Name="RatingNum" Type="String" Nullable="false" />
+          <NavigationProperty Name="Post" Relationship="CarpoolDB.RatingPosts" FromRole="Rating" ToRole="Posts" />
+          <Property Name="PostsId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="CarpoolDB.UsersRating" FromRole="Rating" ToRole="Users" />
+          <Property Name="UsersId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="History">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="User" Relationship="CarpoolDB.UsersHistory" FromRole="History" ToRole="Users" />
+          <Property Name="UsersId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Post" Relationship="CarpoolDB.HistoryPosts" FromRole="History" ToRole="Posts" />
+          <Property Name="PostsId" Type="Int32" Nullable="false" />
+          <Property Name="As" Type="String" Nullable="false" />
+        </EntityType>
+        <Association Name="UsersHistory">
+          <End Type="CarpoolDB.Users" Role="Users" Multiplicity="1" />
+          <End Type="CarpoolDB.History" Role="History" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="History">
+              <PropertyRef Name="UsersId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="HistoryPosts">
+          <End Type="CarpoolDB.History" Role="History" Multiplicity="*" />
+          <End Type="CarpoolDB.Posts" Role="Posts" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="Posts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="History">
+              <PropertyRef Name="PostsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="RatingPosts">
+          <End Type="CarpoolDB.Rating" Role="Rating" Multiplicity="*" />
+          <End Type="CarpoolDB.Posts" Role="Posts" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="Posts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Rating">
+              <PropertyRef Name="PostsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UsersRating">
+          <End Type="CarpoolDB.Users" Role="Users" Multiplicity="1" />
+          <End Type="CarpoolDB.Rating" Role="Rating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Rating">
+              <PropertyRef Name="UsersId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CarpoolDBStoreContainer" CdmEntityContainer="CarpoolDBContainer">
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="IsTypeOf(CarpoolDB.Users)">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Posts">
+      <EntityTypeMapping TypeName="IsTypeOf(CarpoolDB.Posts)">
+        <MappingFragment StoreEntitySet="Posts">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UsersId" ColumnName="UsersId" />
+          <ScalarProperty Name="From" ColumnName="From" />
+          <ScalarProperty Name="To" ColumnName="To" />
+          <ScalarProperty Name="Cost" ColumnName="Cost" />
+          <ScalarProperty Name="Departure" ColumnName="Departure" />
+          <ScalarProperty Name="Seats" ColumnName="Seats" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Ratings">
+      <EntityTypeMapping TypeName="IsTypeOf(CarpoolDB.Rating)">
+        <MappingFragment StoreEntitySet="Ratings">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="RatingNum" ColumnName="RatingNum" />
+          <ScalarProperty Name="PostsId" ColumnName="PostsId" />
+          <ScalarProperty Name="UsersId" ColumnName="UsersId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Histories">
+      <EntityTypeMapping TypeName="IsTypeOf(CarpoolDB.History)">
+        <MappingFragment StoreEntitySet="Histories">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UsersId" ColumnName="UsersId" />
+          <ScalarProperty Name="PostsId" ColumnName="PostsId" />
+          <ScalarProperty Name="As" ColumnName="As" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
