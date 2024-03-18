@@ -93,8 +93,8 @@ namespace Carpool_App
                     var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
                     if (mainWindow != null)
                     {
-                        // Pass data to the MainWindow instance
-                        mainWindow.UpdateFromLogin(userId);
+                        //Saving UserID data to the Store
+                        Store.Store.UserID = userId;
 
                         // Close the LoginWindow
                         this.Close();

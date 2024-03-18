@@ -27,5 +27,21 @@ namespace Carpool_App.Classes
             }
             return true;
         }
+
+        //Check add post form
+        public static bool CheckAddPostForm(string from, string to, string date, string time, string seats, string price)
+        {
+            if (string.IsNullOrWhiteSpace(from) || string.IsNullOrWhiteSpace(to) || string.IsNullOrWhiteSpace(date) || string.IsNullOrWhiteSpace(time) || string.IsNullOrWhiteSpace(seats) || string.IsNullOrWhiteSpace(price))
+            {
+                DateTime dateValue = Convert.ToDateTime(date);
+                if (dateValue < DateTime.Today)
+                {
+                    return false;
+                }
+                return false;
+            }
+
+            return true;
+        }
     }
 }

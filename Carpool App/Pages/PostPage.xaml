@@ -1,0 +1,74 @@
+﻿<Page x:Class="Carpool_App.Pages.PostPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Carpool_App.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Background="Beige"
+      Title="PostPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Create a post" Margin="20 0 0 0" FontSize="20" VerticalAlignment="Center"/>
+        <Button Grid.Row="0" Grid.Column="1" Content="Go back" VerticalAlignment="Center" Width="80" Click="Button_Click"/>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Row="1" Grid.ColumnSpan="2">
+            <StackPanel x:Name="ContentBlock" VerticalAlignment="Top" MaxWidth="500">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="User Type" HorizontalAlignment="Center" FontSize="20"/>
+                    <!-- User Type ComboBox with Driver and Passenger options -->
+                    <ComboBox x:Name="UserTypeField" Grid.Row="1" Margin="0 0 0 20" Grid.ColumnSpan="2" HorizontalAlignment="Center" Width="200">
+                        <ComboBoxItem Content="Driver" IsSelected="True"/>
+                        <ComboBoxItem Content="Passenger"/>
+                    </ComboBox>
+                    <!-- From and To as TextBoxes -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="From" HorizontalAlignment="Center" FontSize="20"/>
+                    <TextBox x:Name="FromField" Grid.Row="3" Margin="0 0 0 20" Grid.Column="0" HorizontalAlignment="Center" Width="200"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="To" HorizontalAlignment="Center" FontSize="20"/>
+                    <TextBox x:Name="ToField" Grid.Row="3" Margin="0 0 0 20" Grid.Column="1" HorizontalAlignment="Center" Width="200"/>
+                    <!-- Date and Time in the same row -->
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Date" HorizontalAlignment="Center" FontSize="20"/>
+                    <DatePicker x:Name="DateField" Grid.Row="5" Grid.Column="0" Width="200" Margin="0 0 0 20"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1" Text="Time" HorizontalAlignment="Center" FontSize="20"/>
+                    <TextBox x:Name="TimeField" Grid.Row="5" Grid.Column="1" Width="200" Margin="0 0 0 20"/>
+                    <!-- Seats amount field as a ComboBox -->
+                    <TextBlock Grid.Row="6" Text="Seats" HorizontalAlignment="Center" FontSize="20"/>
+                    <ComboBox x:Name="SeatsField" Grid.Row="7" Margin="0 0 0 20" HorizontalAlignment="Center" Width="200">
+                        <ComboBoxItem Content="1" IsSelected="True"/>
+                        <ComboBoxItem Content="2"/>
+                        <ComboBoxItem Content="3"/>
+                        <ComboBoxItem Content="4"/>
+                        <ComboBoxItem Content="5"/>
+                        <ComboBoxItem Content="6"/>
+                    </ComboBox>
+                    <TextBlock Grid.Row="6" Grid.Column="1" Text="Time" HorizontalAlignment="Center" FontSize="20"/>
+                    <TextBox x:Name="PriceField" Grid.Row="7" Grid.Column="1" Margin="0 0 0 20" Width="200"/>
+                    <Button Grid.Row="8" Grid.ColumnSpan="2" Content="Post" HorizontalAlignment="Center" Width="100" Click="Button_Click_1"/>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

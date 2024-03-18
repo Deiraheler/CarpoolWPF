@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Carpool_App.Classes;
+using Carpool_App.UserControls;
 using MySql.Data.MySqlClient;
 
 namespace Carpool_App
@@ -21,23 +23,10 @@ namespace Carpool_App
     /// </summary>
     public partial class MainWindow : Window
     {
-        MySqlConnection connection;
-        private int _userId;
-
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void Button_LogIn(object sender, RoutedEventArgs e)
-        {
-            LoginWindow loginWindow = new LoginWindow();
-            loginWindow.Show();
-        }
-
-        public void UpdateFromLogin(int userId)
-        {
-            _userId = userId;
+            MainFrame.Content = new Pages.MainPage();
         }
     }
 }
