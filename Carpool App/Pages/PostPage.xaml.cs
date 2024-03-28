@@ -20,6 +20,8 @@ namespace Carpool_App.Pages
     /// </summary>
     public partial class PostPage : Page
     {
+        Classes.Db db = new Classes.Db();
+
         public PostPage()
         {
             InitializeComponent();
@@ -36,7 +38,7 @@ namespace Carpool_App.Pages
             if (Classes.FormControll.CheckAddPostForm(FromField.Text, ToField.Text, DateField.Text, TimeField.Text, SeatsField.Text, PriceField.Text))
             {
                 //Add post to database
-                Classes.DatabaseControll.AddPost(FromTextBox.Text, ToTextBox.Text, DateTextBox.Text, TimeTextBox.Text, SeatsTextBox.Text, PriceTextBox.Text);
+                db.AddPost(((ComboBoxItem)UserTypeField.SelectedItem).Tag.ToString(), FromField.Text, ToField.Text, DateField.SelectedDate.ToString(), TimeField.Text, SeatsField.Text, PriceField.Text);
                 MessageBox.Show("Post added successfully!");
                 NavigationService.GoBack();
             }

@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Carpool_App.Interfaces;
 using System;
 using System.Windows;
 
@@ -69,5 +70,35 @@ namespace Carpool_App.Classes
             });
             return id;
         }
+
+        //Get user data by email or id
+        public void GetUserData(string email, int? id, Action<ConcreteUser> handleData)
+        {
+            string query = "";
+            if (email != null)
+            {
+                query = $"SELECT id, name, email, password FROM Users WHERE email = '{email}'";
+            }
+            else if (id.HasValue)
+            {
+                query = $"SELECT id, name, email, password FROM Users WHERE id = {id}";
+            }
+
+            ExecuteQuery(query, (reader) =>
+            {
+                if (reader.Read())
+                {
+                    var user = new ConcreteUser
+                    {
+                        userId = reader.GetInt32(reader.GetOrdinal("id")),
+                        userName = reader.GetString(reader.GetOrdinal("name")),
+                        userEmail = reader.GetString(reader.GetOrdinal("email")),
+                        password = reader.GetString(reader.GetOrdinal("password"))
+                    };
+                    handleData(user);
+                }
+            });
+        }
+
     }
 }

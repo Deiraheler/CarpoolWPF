@@ -161,9 +161,13 @@
     <Compile Include="Classes\FormControll.cs" />
     <Compile Include="Classes\GtfsAPI.cs" />
     <Compile Include="Classes\UserAuth.cs" />
+    <Compile Include="Events\UserEvents.cs" />
     <Compile Include="History.cs">
       <DependentUpon>CarpoolDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\CarPost.cs" />
+    <Compile Include="Interfaces\ConcreteUser.cs" />
+    <Compile Include="Interfaces\User.cs" />
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -173,6 +177,9 @@
     <Compile Include="Pages\PostPage.xaml.cs">
       <DependentUpon>PostPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Profile.xaml.cs">
+      <DependentUpon>Profile.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Posts.cs">
       <DependentUpon>CarpoolDB.tt</DependentUpon>
     </Compile>
@@ -180,14 +187,21 @@
       <DependentUpon>CarpoolDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Store\Store.cs" />
+    <Compile Include="UI\UI.cs" />
     <Compile Include="UserControls\BusControll.xaml.cs">
       <DependentUpon>BusControll.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\CarsControll.xaml.cs">
       <DependentUpon>CarsControll.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\MapsControl.xaml.cs">
+      <DependentUpon>MapsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\PassangerControll.xaml.cs">
       <DependentUpon>PassangerControll.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\StarRatingControl.xaml.cs">
+      <DependentUpon>StarRatingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Users.cs">
       <DependentUpon>CarpoolDB.tt</DependentUpon>
@@ -226,6 +240,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Profile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\BusControll.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -234,7 +252,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\MapsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\PassangerControll.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\StarRatingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -285,6 +311,9 @@
       <LastGenOutput>CarpoolDB.cs</LastGenOutput>
       <DependentUpon>CarpoolDB.edmx</DependentUpon>
     </Content>
+    <Content Include="HTMLLayouts\map.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -301,6 +330,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

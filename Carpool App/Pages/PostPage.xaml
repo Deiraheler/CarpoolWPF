@@ -41,8 +41,8 @@
                     <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="User Type" HorizontalAlignment="Center" FontSize="20"/>
                     <!-- User Type ComboBox with Driver and Passenger options -->
                     <ComboBox x:Name="UserTypeField" Grid.Row="1" Margin="0 0 0 20" Grid.ColumnSpan="2" HorizontalAlignment="Center" Width="200">
-                        <ComboBoxItem Content="Driver" IsSelected="True"/>
-                        <ComboBoxItem Content="Passenger"/>
+                        <ComboBoxItem Content="Driver" Tag="0" IsSelected="True"/>
+                        <ComboBoxItem Content="Passenger" Tag="1"/>
                     </ComboBox>
                     <!-- From and To as TextBoxes -->
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="From" HorizontalAlignment="Center" FontSize="20"/>
@@ -64,7 +64,7 @@
                         <ComboBoxItem Content="5"/>
                         <ComboBoxItem Content="6"/>
                     </ComboBox>
-                    <TextBlock Grid.Row="6" Grid.Column="1" Text="Time" HorizontalAlignment="Center" FontSize="20"/>
+                    <TextBlock Grid.Row="6" Grid.Column="1" Text="Cost" HorizontalAlignment="Center" FontSize="20"/>
                     <TextBox x:Name="PriceField" Grid.Row="7" Grid.Column="1" Margin="0 0 0 20" Width="200"/>
                     <Button Grid.Row="8" Grid.ColumnSpan="2" Content="Post" HorizontalAlignment="Center" Width="100" Click="Button_Click_1"/>
                 </Grid>

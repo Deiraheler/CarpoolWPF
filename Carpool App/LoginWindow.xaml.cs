@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Carpool_App.Classes;
+using Carpool_App.Events;
 
 namespace Carpool_App
 {
@@ -89,12 +91,14 @@ namespace Carpool_App
                 Classes.UserAuth userAuth = new Classes.UserAuth();
                 if (userAuth.UserExists(email, password))
                 {
-                    int userId = userAuth.GetUserId(email);
+                    userAuth.GetUserData(email, null, (user) =>
+                    {
+                        Store.Store.UserData = user;
+                    });
                     var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
                     if (mainWindow != null)
                     {
-                        //Saving UserID data to the Store
-                        Store.Store.UserID = userId;
+                        UserEvents.RaiseUserLogIn(this, new UserEventArgs());
 
                         // Close the LoginWindow
                         this.Close();

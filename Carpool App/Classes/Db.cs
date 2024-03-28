@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Carpool_App.Interfaces;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,8 +44,38 @@ namespace Carpool_App.Classes
         // Insert Post to database
         public void AddPost(string userType, string from, string to, string date, string time, string seats, string price)
         {
-            string query = $"INSERT INTO Posts (from_location, to_location, date, time, seats, price) VALUES ('{from}', '{to}', '{date}', '{time}', '{seats}', '{price}')";
+            string query = $"INSERT INTO Posts (`UserID`, `From`, `To`, `Departure`, `Time`, `Seats`, `Cost`, `Type`) VALUES ('{Store.Store.UserData.userId}', '{from}', '{to}', '{date}', '{time}', '{seats}', '{price}', '{userType}')";
             ExecuteQuery(query, (reader) => { });
         }
+
+        public void GetAllPosts(Action<List<CarPost>> handleData)
+        {
+            string query = "SELECT U.name, P.id, P.UserID, P.From, P.To, P.Cost, P.Departure, P.Time, P.Seats, P.Type, AVG(R.RatingNum) AS AverageRating FROM Posts AS P JOIN Users AS U ON P.UserID = U.id LEFT JOIN Raiting AS R ON R.EndUserID = U.id GROUP BY U.id, P.id;";
+            List<CarPost> posts = new List<CarPost>();
+
+            ExecuteQuery(query, (reader) =>
+            {
+                while (reader.Read())
+                {
+                    var post = new CarPost
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        UserId = reader.GetInt32(reader.GetOrdinal("UserID")),
+                        Username = reader.GetString(reader.GetOrdinal("name")),
+                        From = reader.GetString(reader.GetOrdinal("From")),
+                        To = reader.GetString(reader.GetOrdinal("To")),
+                        Cost = reader.GetDecimal(reader.GetOrdinal("Cost")),
+                        Departure = DateTime.Parse(reader.GetString(reader.GetOrdinal("Departure"))),
+                        Time = reader.GetString(reader.GetOrdinal("Time")),
+                        Seats = reader.GetInt32(reader.GetOrdinal("Seats")),
+                        Type = reader.GetBoolean(reader.GetOrdinal("Type")),
+                        Rating = reader.GetInt32(reader.GetOrdinal("AverageRating")),
+                    };
+                    posts.Add(post);
+                }
+                handleData(posts);
+            });
+        }
+
     }
 }

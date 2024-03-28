@@ -1,5 +1,7 @@
 ﻿using Carpool_App.Classes;
+using Carpool_App.Events;
 using Carpool_App.UserControls;
+using Carpool_App.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,9 @@ namespace Carpool_App.Pages
         public MainPage()
         {
             InitializeComponent();
+            //SetUp event handlers
+            SubscribeToUserEvents();
+            UI.UI.ToggleVisibility(AddButton);
             // Set the default tab to be the "Cars" tab
             Button_Cars_Click(null, null);
         }
@@ -87,6 +92,35 @@ namespace Carpool_App.Pages
             BusTabBtn.Background = Brushes.CadetBlue;
             CarsTabBtn.Background = Brushes.CadetBlue;
             PassangerTabBtn.Background = Brushes.CadetBlue;
+        }
+
+        //Method to subscribe to UserEvents
+        private void SubscribeToUserEvents()
+        {
+            UserEvents.UserLogIn += OnUserLogIn;
+            UserEvents.UserLogOut += OnUserLogOut;
+        }
+
+        //Method to unsubscribe to UserEvents
+        private void UnsubscribeToUserEvents()
+        {
+            UserEvents.UserLogIn -= OnUserLogIn;
+            UserEvents.UserLogOut -= OnUserLogOut;
+        }
+
+        private void OnUserLogIn(object sender, UserEventArgs e)
+        {
+            ButtonGrid.Width = GridLength.Auto;
+            LogInBtn.Margin = new Thickness(0, 0, 10, 0);
+            LogInBtn.Content = $"Profile, {Store.Store.UserData.userName}";
+            UI.UI.ToggleVisibility(AddButton);
+        }
+
+        private void OnUserLogOut(object sender, UserEventArgs e)
+        {
+            ButtonGrid.Width = new GridLength(80);
+            LogInBtn.Content = "Log In";
+            UI.UI.ToggleVisibility(AddButton);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
