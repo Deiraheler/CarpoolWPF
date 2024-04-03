@@ -43,5 +43,15 @@ namespace Carpool_App.Classes
 
             return true;
         }
+
+        //Check filter form
+        public static bool CheckFilterForm(string from, string to, string date)
+        {
+            if (string.IsNullOrWhiteSpace(from) || string.IsNullOrWhiteSpace(to) || string.IsNullOrWhiteSpace(date))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

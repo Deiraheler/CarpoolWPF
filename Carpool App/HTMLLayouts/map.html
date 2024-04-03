@@ -1,25 +1,140 @@
-﻿<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+﻿<!DOCTYPE html>
+<html>
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <script type="text/javascript"
-            src="http://maps.google.com.mx/maps/api/js?sensor=true&language=es"></script>
-    <script src='http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js'>
-    </script>
-    <script type="text/javascript">
-        function initialize() {
-            var latlng = new google.maps.LatLng(-34.397, 150.644);
-            var myOptions = {
-                zoom: 8,
-                center: latlng,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    <title>Simple Map</title>
+    <style>
+        /* Always set the map height explicitly to define the size of the div element that contains the map. */
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        var map;
+        var directionsService;
+        var directionsRenderer;
+        var startMarker;
+        var endMarker;
+
+        function initMap() {
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8
+            });
+            directionsRenderer.setMap(map);
+
+            // Click listener to set the start point
+            /* map.addListener('click', function (e) {
+                if (!startMarker || !endMarker) {
+                    placeMarker(e.latLng, map);
+                } else {
+                    // Clear the existing markers and route
+                    startMarker.setMap(null);
+                    endMarker.setMap(null);
+                    directionsRenderer.set('directions', null);
+                    placeMarker(e.latLng, map);
+                }
+            }); */
         }
 
+        function setFromToPoints(from, to) {
+            // Check if the map has been initialized
+            if (!map) return;
+
+            // Clear out the old directions if they exist
+            if (directionsRenderer) {
+                directionsRenderer.set('directions', null); // Clear previous directions
+            }
+
+            // Remove the previous markers from the map
+            if (startMarker) {
+                startMarker.setMap(null);
+                startMarker = null;
+            }
+            if (endMarker) {
+                endMarker.setMap(null);
+                endMarker = null;
+            }
+
+            // No need to reinitialize directionsRenderer here
+            directionsRenderer.setMap(map); // Make sure it's still attached to the current map
+
+            // Use the existing DirectionsService instance to calculate the new route
+            directionsService.route({
+                origin: from + ", Ireland",
+                destination: to + ", Ireland",
+                travelMode: google.maps.TravelMode.DRIVING
+            }, function (response, status) {
+                if (status === 'OK') {
+                    // Set the directions on the map
+                    directionsRenderer.setDirections(response);
+
+                    // Create and set new markers for the starting and ending locations
+                    startMarker = new google.maps.Marker({
+                        map: map,
+                        position: response.routes[0].legs[0].start_location,
+                        title: from
+                    });
+
+                    endMarker = new google.maps.Marker({
+                        map: map,
+                        position: response.routes[0].legs[0].end_location,
+                        title: to
+                    });
+                } else {
+                    console.error('Directions request failed due to ' + status);
+                }
+            });
+        }
+
+        function placeMarker(position, map) {
+            var marker = new google.maps.Marker({
+                position: position,
+                map: map
+            });
+
+            if (!startMarker) {
+                startMarker = marker;
+            } else {
+                endMarker = marker;
+                calculateAndDisplayRoute(directionsService, directionsRenderer);
+            }
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+            directionsService.route({
+                origin: startMarker.getPosition(),
+                destination: endMarker.getPosition(),
+                travelMode: 'DRIVING'
+            }, function (response, status) {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(response);
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+        }
+
+        function loadScript() {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD9Nqn2ri8Pau4W9VPOhNPb7CzT_97M9GA&callback=initMap';
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        }
+
+        window.onload = loadScript;
     </script>
-</head>
-<body onload="initialize()">
-<div id="map_canvas" style="width:100%; height:100%"></div>
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap" async defer></script> -->
 </body>
 </html>

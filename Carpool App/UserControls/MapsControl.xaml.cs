@@ -30,6 +30,15 @@ namespace Carpool_App.UserControls
             DependencyProperty.Register("To", typeof(string), typeof(MapsControl),
                 new PropertyMetadata(string.Empty));
 
+        /*private static void OnFromOrToPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as MapsControl;
+            if (control != null)
+            {
+                control.UpdateMapsDisplay().ConfigureAwait(false);
+            }
+        }*/
+
         public string From
         {
             get { return (string)GetValue(FromProperty); }
@@ -42,23 +51,72 @@ namespace Carpool_App.UserControls
             set { SetValue(ToProperty, value); }
         }
 
-
-        private void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
+        public async Task UpdateMapsDisplay()
         {
-            UpdateMapsDisplay();
+            if (webView.CoreWebView2 != null)
+            {
+                string script = $@"
+            new Promise((resolve, reject) => {{
+                setFromToPoints('{From}', '{To}')
+                    .then(resolve)
+                    .catch(reject);
+            }})
+        ";
+
+                await webView.CoreWebView2.ExecuteScriptAsync(script);
+            }
         }
 
-        private void UpdateMapsDisplay()
-        {
-            
-        }
 
         public MapsControl()
         {
             InitializeComponent();
-            string appDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string filePath = System.IO.Path.Combine(appDir, "HTMLLayouts\\map.html"); // Assuming "map.html" is the HTML file
-            webBrowser.Navigate(new Uri(filePath));
+            this.Loaded += MapsControl_Loaded;
         }
+
+        private async void MapsControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            await InitializeAsync();
+        }
+
+        private async Task InitializeAsync()
+        {
+            try
+            {
+                await webView.EnsureCoreWebView2Async(null);
+
+                if (webView == null || webView.CoreWebView2 == null)
+                    throw new InvalidOperationException("WebView2 has not been initialized.");
+
+                // Hook into the NavigationCompleted event to know when the page is fully loaded
+                webView.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;
+
+                string appDir = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string filePath = System.IO.Path.Combine(appDir, "HTMLLayouts\\map.html");
+                webView.CoreWebView2.Navigate(new Uri(filePath).AbsoluteUri);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error initializing WebView2: {ex.Message}, Inner exception: {ex.InnerException?.Message}");
+            }
+        }
+
+        private async void CoreWebView2_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+        {
+            if (e.IsSuccess)
+            {
+                // Make sure From and To are set to valid locations before updating the map.
+                if (!string.IsNullOrEmpty(From) && !string.IsNullOrEmpty(To))
+                {
+                    await UpdateMapsDisplay();
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Navigation to the map page failed: {e.WebErrorStatus}");
+            }
+        }
+
+
     }
 }

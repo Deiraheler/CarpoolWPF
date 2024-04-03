@@ -13,12 +13,19 @@
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
         <!-- Heading TextBlock -->
-        <TextBlock FontSize="20" Text="Cars"/>
+        <TextBlock FontSize="20" Margin="0 0 0 10" Text="Cars"/>
+
+        <local:Filters Grid.Row="1" Grid.ColumnSpan="2"></local:Filters>
 
         <!-- ListBox setup to take 50% width of the window -->
-        <ListBox x:Name="UserControllList" SelectionChanged="UserControllList_SelectionChanged" Margin="0,50,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Column="0">
+        <ListBox x:Name="UserControllList" SelectionChanged="UserControllList_SelectionChanged" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Column="0" Grid.Row="2">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
@@ -56,14 +63,14 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Border Grid.Column="1" Width="Auto" Background="#EEE" Margin="10,50,0,0" VerticalAlignment="Top">
+        <Border Grid.Column="1" Grid.Row="2" Width="Auto" Background="#EEE" Margin="10,0,0,0" VerticalAlignment="Top">
             <StackPanel>
                 <TextBlock x:Name="OutputNameTextBlock" Text="Trip data here" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14"/>
                 <StackPanel Margin="10" x:Name="TripDataGrid">
                     <TextBlock><Run Text="Name:"/><Run Text=" "/><Run x:Name="UsernameOut"/></TextBlock>
                     <TextBlock><Run Text="From:"/><Run Text=" "/><Run x:Name="FromOut"/></TextBlock>
                     <TextBlock><Run Text="To:"/><Run Text=" "/><Run x:Name="ToOut"/></TextBlock>
-                    <local:MapsControl x:Name="MapsControlUserControl" From="" To=""></local:MapsControl>
+                    <local:MapsControl x:Name="MapsControlUserControl" From="{Binding SelectedCarPost.From}" To="{Binding SelectedCarPost.To}" Panel.ZIndex="-1"></local:MapsControl>
                     <TextBlock><Run Text="Cost:"/><Run Text=" "/><Run x:Name="CostOut"/></TextBlock>
                     <TextBlock><Run Text="Seats:"/><Run Text=" "/><Run x:Name="SeatsOut"/></TextBlock>
                     <TextBlock><Run Text="Departure:"/><Run Text=" "/><Run x:Name="DepartureOut"/></TextBlock>

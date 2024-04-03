@@ -1,4 +1,5 @@
 ﻿using Carpool_App.Classes;
+using Carpool_App.Events;
 using Carpool_App.Interfaces;
 using System;
 using System.CodeDom;
@@ -25,11 +26,24 @@ namespace Carpool_App.UserControls
     public partial class CarsControll : UserControl
     {
         public ObservableCollection<CarPost> CarPosts { get; set; } = new ObservableCollection<CarPost>();
+        private CarPost _selectedCarPost;
+        public CarPost SelectedCarPost
+        {
+            get => _selectedCarPost;
+            set
+            {
+                _selectedCarPost = value;
+                // Assuming MapsControlUserControl is accessible
+                MapsControlUserControl.From = _selectedCarPost?.From ?? string.Empty;
+                MapsControlUserControl.To = _selectedCarPost?.To ?? string.Empty;
+            }
+        }
 
 
         public CarsControll()
         {
             InitializeComponent();
+            UserEvents.SearchEvent += UserEvents_SearchEvent;
 
             // Get all posts from the database
             Db db = new Db();
@@ -44,21 +58,43 @@ namespace Carpool_App.UserControls
             UserControllList.ItemsSource = CarPosts;
         }
 
-        private void UserControllList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void UserEvents_SearchEvent(object sender, UserEventArgs e)
         {
-            // Get the selected item
-            var selectedPost = UserControllList.SelectedItem as CarPost;
-            if (selectedPost != null)
+            // Assuming you have a method in Db class to perform search with filters
+            Db db = new Db();
+            db.GetFilteredPosts(e.FromCity, e.ToCity, e.Date, e.Time, (posts) =>
             {
-                UsernameOut.Text = selectedPost.Username;
-                FromOut.Text = selectedPost.From;
-                ToOut.Text = selectedPost.To;
-                DepartureOut.Text = selectedPost.Departure.ToShortDateString();
-                TimeOut.Text = selectedPost.Time;
-                SeatsOut.Text = selectedPost.Seats.ToString();
-                CostOut.Text = selectedPost.Cost.ToString();
-                RatingStars.RatingValue = selectedPost.Rating;
+                Dispatcher.Invoke(() =>
+                {
+                    CarPosts.Clear();
+                    foreach (var post in posts)
+                    {
+                        CarPosts.Add(post);
+                    }
+
+                    UserControllList.ItemsSource = CarPosts;
+                });
+            });
+        }
+
+        private async void UserControllList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            SelectedCarPost = UserControllList.SelectedItem as CarPost;
+            // Get the selected item
+            if (SelectedCarPost != null)
+            {
+                UsernameOut.Text = SelectedCarPost.Username;
+                FromOut.Text = SelectedCarPost.From;
+                ToOut.Text = SelectedCarPost.To;
+                DepartureOut.Text = SelectedCarPost.Departure.ToShortDateString();
+                TimeOut.Text = SelectedCarPost.Time;
+                SeatsOut.Text = SelectedCarPost.Seats.ToString();
+                CostOut.Text = SelectedCarPost.Cost.ToString();
+                RatingStars.RatingValue = SelectedCarPost.Rating;
             }
+
+            await MapsControlUserControl.UpdateMapsDisplay();
         }
     }
 }

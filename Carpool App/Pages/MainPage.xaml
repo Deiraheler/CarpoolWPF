@@ -44,9 +44,9 @@
 
                 </StackPanel>
             </ScrollViewer>
-            <Button Grid.Row="1" x:Name="BusTabBtn" Grid.Column="0" Margin="10" Background="CadetBlue" FontSize="20" Click="Button_Bus_Click">Bus</Button>
-            <Button Grid.Row="1" x:Name="CarsTabBtn" Grid.Column="1" Margin="10" Background="CadetBlue" FontSize="20" Click="Button_Cars_Click">Cars</Button>
-            <Button Grid.Row="1" x:Name="PassangerTabBtn" Grid.Column="2" Margin="10" Background="CadetBlue" FontSize="20" Click="Button_Passengers_Click">Passangers</Button>
+            <Button Grid.Row="1" x:Name="BusTabBtn" Grid.Column="0" Margin="10" Background="CadetBlue" FontSize="20" Click="Button_Bus_Click" Panel.ZIndex="10">Bus</Button>
+            <Button Grid.Row="1" x:Name="CarsTabBtn" Grid.Column="1" Margin="10" Background="CadetBlue" FontSize="20" Click="Button_Cars_Click" Panel.ZIndex="10">Cars</Button>
+            <Button Grid.Row="1" x:Name="PassangerTabBtn" Grid.Column="2" Margin="10" Background="CadetBlue" FontSize="20" Click="Button_Passengers_Click" Panel.ZIndex="10">Passangers</Button>
             <Button x:Name="AddButton" Margin="0,0,31,10" Grid.Column="2" Cursor="Cross" HorizontalAlignment="Right" Width="60" Height="60" VerticalAlignment="Bottom" Click="Button_Click">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
