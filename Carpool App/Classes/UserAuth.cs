@@ -100,5 +100,20 @@ namespace Carpool_App.Classes
             });
         }
 
+        // Get user rating by user ID
+        public int GetUserRating(int userId)
+        {
+            string query = $"SELECT AVG(RatingNum) as AverageRating FROM Rating WHERE EndUserID = {userId}";
+            int rating = 0;
+            ExecuteQuery(query, (reader) =>
+            {
+                if (reader.Read() && !reader.IsDBNull(reader.GetOrdinal("AverageRating")))
+                {
+                    double averageRating = reader.GetDouble(reader.GetOrdinal("AverageRating"));
+                    rating = Convert.ToInt32(Math.Round(averageRating));
+                }
+            });
+            return rating;
+        }
     }
 }

@@ -19,10 +19,96 @@
             <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Profile page" Margin="20 0 0 0" FontSize="20" VerticalAlignment="Center"/>
-        <Button Grid.Row="0" Grid.Column="1" Content="Go back" VerticalAlignment="Center" Width="80"/>
+        <Button Grid.Row="0" Grid.Column="1" Content="Go back" VerticalAlignment="Center" Width="80" Click="Button_Click"/>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Row="1" Grid.ColumnSpan="2">
-            <StackPanel x:Name="ContentBlock" VerticalAlignment="Top" MaxWidth="500">
-                
+            <StackPanel x:Name="ContentBlock" VerticalAlignment="Top" Margin="10">
+                <TextBlock Background="#FF3B3B3B" Padding="10 5" Foreground="AliceBlue" Text="Account data:" Margin="0 0 0 10" HorizontalAlignment="Left" FontSize="18"/>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel>
+                        <TextBlock Text="Username:" HorizontalAlignment="Left" FontSize="16"/>
+                        <TextBox x:Name="Username" Text="Username" HorizontalAlignment="Left" FontSize="16" Width="200"/>
+                    </StackPanel>
+                    <StackPanel Margin="10 0">
+                        <TextBlock Text="Password:" HorizontalAlignment="Left" FontSize="16"/>
+                        <PasswordBox x:Name="Password" Password="Password" HorizontalAlignment="Left" FontSize="16" Width="200"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Email:" HorizontalAlignment="Left" FontSize="16"/>
+                        <TextBox x:Name="Email" Text="Email" HorizontalAlignment="Left" FontSize="16" Width="200"/>
+                    </StackPanel>
+                </StackPanel>
+                <Button Content="Save" HorizontalAlignment="Left" Padding="10 5" Margin="0 10"></Button>
+                <TextBlock Background="#FF3B3B3B" Padding="10 5" Foreground="AliceBlue" Text="Upcoming your trips:" Margin="0 0 0 10" HorizontalAlignment="Left" FontSize="18"/>
+                <!-- I need to lists in grid format one on left and other on right  -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel MinHeight="100">
+                        <ListBox x:Name="UserControllList" Height="100" SelectionChanged="UserControllList_OnSelected" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Column="0" Grid.Row="2">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Username, StringFormat=Name: \{0\}}" FontSize="14"/>
+
+                                            <TextBlock Grid.Column="0" Grid.Row="1" FontSize="14">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} -&gt; {1}">
+                                                        <Binding Path="From"/>
+                                                        <Binding Path="To"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+
+                                            <TextBlock Grid.Column="1" Grid.Row="0" TextAlignment="Center" Margin="15, 0, 0, 0" Text="{Binding Cost, StringFormat=Cost: \{0\}€}" FontSize="14"/>
+                                            <TextBlock Grid.Column="1" Grid.Row="1" TextAlignment="Center" Margin="15, 0, 0, 0" Text="{Binding Seats, StringFormat=Seats available: \{0\}}" FontSize="14"/>
+
+                                            <TextBlock Grid.Column="2" Grid.Row="0" TextAlignment="Right" Margin="15, 0, 0, 0"
+   Text="{Binding Departure, StringFormat=Date: \{0:dd/MM/yyyy\}}" FontSize="14"/>
+                                            <TextBlock Grid.Column="2" Grid.Row="1" TextAlignment="Right" Margin="15, 0, 0, 0" Text="{Binding Time, StringFormat=Time: \{0\}}" FontSize="14"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <ListBox x:Name="PassengerControllList" SelectionChanged="PassengerControllList_SelectionChanged" Margin="10 0 0 0" Height="100" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Username, StringFormat=Name: {0}}" FontSize="14"/>
+                                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Accepted , StringFormat=Status: {0}}" FontSize="14"></TextBlock>
+                                        </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </Grid>
             </StackPanel>
         </ScrollViewer>
     </Grid>

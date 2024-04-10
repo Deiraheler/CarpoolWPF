@@ -15,6 +15,7 @@ namespace Carpool_App.Events
         public static event UserEventHandler UserLogIn;
         public static event UserEventHandler UserLogOut;
         public static event UserEventHandler SearchEvent;
+        public static event UserEventHandler UserApprove;
 
         // Methods to raise the events
         public static void RaiseUserLogIn(object sender, UserEventArgs e)
@@ -30,6 +31,11 @@ namespace Carpool_App.Events
         public static void RaiseSearchEvent(object sender, UserEventArgs e)
         {
             SearchEvent?.Invoke(sender, e);
+        }
+
+        public static void RaiseUserApprove(object sender, UserEventArgs e)
+        {
+            UserApprove?.Invoke(sender, e);
         }
     }
 

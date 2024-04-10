@@ -24,6 +24,17 @@
 
         <local:Filters Grid.Row="1" Grid.ColumnSpan="2"></local:Filters>
 
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <TextBlock HorizontalAlignment="Center">
+                Can't find your route? 
+                <LineBreak/>
+                Sign in and create post as a passenger 
+                <LineBreak/>
+                so other drivers can add you!
+            </TextBlock>
+            <Button x:Name="LogInBtn" Content="Log In" MaxWidth="200" Padding="10" Margin="10" Background="Blue" Foreground="White" Click="Button_LogIn"/>
+        </StackPanel>
+
         <!-- ListBox setup to take 50% width of the window -->
         <ListBox x:Name="UserControllList" SelectionChanged="UserControllList_SelectionChanged" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Column="0" Grid.Row="2">
             <ListBox.ItemTemplate>

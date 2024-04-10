@@ -176,6 +176,7 @@
     </Compile>
     <Compile Include="Interfaces\CarPost.cs" />
     <Compile Include="Interfaces\ConcreteUser.cs" />
+    <Compile Include="Interfaces\Request.cs" />
     <Compile Include="Interfaces\User.cs" />
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
@@ -197,8 +198,8 @@
     </Compile>
     <Compile Include="Store\Store.cs" />
     <Compile Include="UI\UI.cs" />
-    <Compile Include="UserControls\BusControll.xaml.cs">
-      <DependentUpon>BusControll.xaml</DependentUpon>
+    <Compile Include="UserApprove.xaml.cs">
+      <DependentUpon>UserApprove.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\CarsControll.xaml.cs">
       <DependentUpon>CarsControll.xaml</DependentUpon>
@@ -256,7 +257,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\BusControll.xaml">
+    <Page Include="UserApprove.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

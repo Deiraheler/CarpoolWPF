@@ -47,19 +47,6 @@ namespace Carpool_App.Pages
             loginWindow.Show();
         }
 
-        private void Button_Bus_Click(object sender, RoutedEventArgs e)
-        {
-            ReturnColorToButtons();
-            // Clear existing content
-            ContentBlock.Children.Clear();
-
-            BusTabBtn.Background = Brushes.LightGray;
-
-            // Add the content for the "Bus" tab
-            var busContent = new BusControll();
-            ContentBlock.Children.Add(busContent);
-        }
-
         private void Button_Cars_Click(object sender, RoutedEventArgs e)
         {
             ReturnColorToButtons();
@@ -89,7 +76,6 @@ namespace Carpool_App.Pages
         //Function that will return color to buttons 
         private void ReturnColorToButtons()
         {
-            BusTabBtn.Background = Brushes.CadetBlue;
             CarsTabBtn.Background = Brushes.CadetBlue;
             PassangerTabBtn.Background = Brushes.CadetBlue;
         }
@@ -113,6 +99,8 @@ namespace Carpool_App.Pages
             ButtonGrid.Width = GridLength.Auto;
             LogInBtn.Margin = new Thickness(0, 0, 10, 0);
             LogInBtn.Content = $"Profile, {Store.Store.UserData.userName}";
+            LogInBtn.Click -= Button_LogIn;
+            LogInBtn.Click += OpenProfilePage;
             UI.UI.ToggleVisibility(AddButton);
         }
 
@@ -121,6 +109,11 @@ namespace Carpool_App.Pages
             ButtonGrid.Width = new GridLength(80);
             LogInBtn.Content = "Log In";
             UI.UI.ToggleVisibility(AddButton);
+        }
+
+        private void OpenProfilePage(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Profile());
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -55,7 +55,7 @@ namespace Carpool_App.Classes
         public void GetAllPosts(Action<List<CarPost>> handleData)
         {
             string query =
-                "SELECT U.name, P.id, P.UserID, P.`From`, P.`To`, P.Cost, P.Departure, P.Time, P.Seats, P.Type, AVG(R.RatingNum) AS AverageRating FROM Posts AS P JOIN Users AS U ON P.UserID = U.id LEFT JOIN Raiting AS R ON R.EndUserID = U.id WHERE STR_TO_DATE(P.Departure, '%d/%m/%Y %H:%i:%s') >= CURDATE() GROUP BY U.id, P.id;";
+                "SELECT U.name, P.id, P.UserID, P.`From`, P.`To`, P.Cost, P.Departure, P.Time, P.Seats, P.Type, AVG(R.RatingNum) AS AverageRating FROM Posts AS P JOIN Users AS U ON P.UserID = U.id LEFT JOIN Rating AS R ON R.EndUserID = U.id WHERE STR_TO_DATE(P.Departure, '%d/%m/%Y %H:%i:%s') >= CURDATE() GROUP BY U.id, P.id;";
             List<CarPost> posts = new List<CarPost>();
 
             ExecuteQuery(query, (reader) =>
@@ -80,6 +80,61 @@ namespace Carpool_App.Classes
                 }
 
                 handleData(posts);
+            });
+        }
+
+        public void GetPostsByUserID(int id, Action<List<CarPost>> handleData)
+        {
+            string query =
+                $"SELECT U.name, P.id, P.UserID, P.`From`, P.`To`, P.Cost, P.Departure, P.Time, P.Seats, P.Type FROM Posts AS P JOIN Users AS U ON P.UserID = U.id WHERE STR_TO_DATE(P.Departure, '%d/%m/%Y %H:%i:%s') >= CURDATE() AND P.UserID = {id} GROUP BY U.id, P.id;";
+            List<CarPost> posts = new List<CarPost>();
+
+            ExecuteQuery(query, (reader) =>
+            {
+                while (reader.Read())
+                {
+                    var post = new CarPost
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        UserId = reader.GetInt32(reader.GetOrdinal("UserID")),
+                        Username = reader.GetString(reader.GetOrdinal("name")),
+                        From = reader.GetString(reader.GetOrdinal("From")),
+                        To = reader.GetString(reader.GetOrdinal("To")),
+                        Cost = reader.GetDecimal(reader.GetOrdinal("Cost")),
+                        Departure = DateTime.Parse(reader.GetString(reader.GetOrdinal("Departure"))),
+                        Time = reader.GetString(reader.GetOrdinal("Time")),
+                        Seats = reader.GetInt32(reader.GetOrdinal("Seats")),
+                        Type = reader.GetBoolean(reader.GetOrdinal("Type")),
+                    };
+                    posts.Add(post);
+                }
+
+                handleData(posts);
+            });
+        }
+
+        //Get passangers from table Requests by PostID
+        public void GetPassangersByPostID(int id, Action<List<Request>> handleData)
+        {
+            string query = $"SELECT U.name, R.id, R.UserID, R.PostID, R.Accepted FROM Requests AS R JOIN Users AS U ON R.UserID = U.id WHERE R.PostID = {id};";
+            List<Request> requests = new List<Request>();
+
+            ExecuteQuery(query, (reader) =>
+            {
+                while (reader.Read())
+                {
+                    var request = new Request
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        UserId = reader.GetInt32(reader.GetOrdinal("UserID")),
+                        Username = reader.GetString(reader.GetOrdinal("name")),
+                        PostId = reader.GetInt32(reader.GetOrdinal("PostID")),
+                        Accepted = reader.GetBoolean(reader.GetOrdinal("Accepted")),
+                    };
+                    requests.Add(request);
+                }
+
+                handleData(requests);
             });
         }
 
@@ -182,7 +237,7 @@ namespace Carpool_App.Classes
                 }
             }
 
-            string query = $"SELECT U.name, P.id, P.UserID, P.`From`, P.`To`, P.Cost, P.Departure, P.Time, P.Seats, P.Type, AVG(R.RatingNum) AS AverageRating FROM Posts AS P JOIN Users AS U ON P.UserID = U.id LEFT JOIN Raiting AS R ON R.EndUserID = U.id {whereConditions} GROUP BY U.id, P.id;";
+            string query = $"SELECT U.name, P.id, P.UserID, P.`From`, P.`To`, P.Cost, P.Departure, P.Time, P.Seats, P.Type, AVG(R.RatingNum) AS AverageRating FROM Posts AS P JOIN Users AS U ON P.UserID = U.id LEFT JOIN Rating AS R ON R.EndUserID = U.id {whereConditions} GROUP BY U.id, P.id;";
 
             List<CarPost> posts = new List<CarPost>();
 
@@ -210,5 +265,18 @@ namespace Carpool_App.Classes
             });
         }
 
+        // Method to approve a user
+        public void ApproveUser(int requestId)
+        {
+            string query = $"UPDATE Requests SET Accepted = 1 WHERE id = {requestId};";
+            ExecuteQuery(query, (reader) => { });
+        }
+
+        // Method to reject a user
+        public void RejectUser(int requestId)
+        {
+            string query = $"DELETE FROM Requests WHERE id = {requestId};";
+            ExecuteQuery(query, (reader) => { });
+        }
     }
 }

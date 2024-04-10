@@ -96,5 +96,11 @@ namespace Carpool_App.UserControls
 
             await MapsControlUserControl.UpdateMapsDisplay();
         }
+
+        private void Button_LogIn(object sender, RoutedEventArgs e)
+        {
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
+        }
     }
 }
