@@ -141,7 +141,7 @@ namespace Carpool_App.Classes
         //Get all routes from and to
         public void GetRoutes(Action<List<string>[]> handleData)
         {
-            string query = "SELECT DISTINCT `From`, `To` FROM Posts;";
+            string query = "SELECT DISTINCT `From`, `To` FROM Posts WHERE STR_TO_DATE(Departure, '%d/%m/%Y %H:%i:%s') >= CURDATE()";
             List<string>[] routes = { new List<string>(), new List<string>() };
 
             ExecuteQuery(query, (reader) =>
@@ -165,7 +165,7 @@ namespace Carpool_App.Classes
         //Get all To citys by From city
         public void GetToCities(string from, Action<List<string>> handleData)
         {
-            string query = $"SELECT DISTINCT `To` FROM Posts WHERE `From` = '{from}';";
+            string query = $"SELECT DISTINCT `To` FROM Posts WHERE STR_TO_DATE(Departure, '%d/%m/%Y %H:%i:%s') >= CURDATE() AND `From` = '{from}';";
             List<string> toCitys = new List<string>();
 
             ExecuteQuery(query, (reader) =>
@@ -185,7 +185,7 @@ namespace Carpool_App.Classes
         {
             // Adjust the query to include the Time column
             string query =
-                $"SELECT `Departure`, `Time` FROM Posts WHERE `From` = '{fromCity}' AND `To` = '{toCity}' ORDER BY `Departure` ASC;";
+                $"SELECT `Departure`, `Time` FROM Posts WHERE `From` = '{fromCity}' AND `To` = '{toCity}' AND STR_TO_DATE(Departure, '%d/%m/%Y %H:%i:%s') >= CURDATE() ORDER BY `Departure` ASC;";
 
             ExecuteQuery(query, (reader) =>
             {
@@ -265,6 +265,12 @@ namespace Carpool_App.Classes
             });
         }
 
+        public void AddRequest(int postId, short type)
+        {
+            string query = $"INSERT INTO Requests (`UserID`, `PostID`, `Type`) VALUES ('{Store.Store.UserData.userId}', '{postId}', '{type}');";
+            ExecuteQuery(query, (reader) => { });
+        }
+
         // Method to approve a user
         public void ApproveUser(int requestId)
         {
@@ -278,5 +284,39 @@ namespace Carpool_App.Classes
             string query = $"DELETE FROM Requests WHERE id = {requestId};";
             ExecuteQuery(query, (reader) => { });
         }
+
+        // Get suggested trips for the user by requests acceptance 2
+        //SELECT U.name, P.id, P.UserID, P.`From`, P.`To`, P.Cost, P.Departure, P.Time, P.Seats, P.Type, AVG(R.RatingNum) AS AverageRating FROM Posts AS P LEFT JOIN Requests AS Req ON Req.PostID = P.id JOIN Users AS U ON P.UserID = U.id LEFT JOIN Rating AS R ON R.EndUserID = U.id WHERE STR_TO_DATE(P.Departure, '%d/%m/%Y %H:%i:%s') >= CURDATE() AND Req.Accepted = 2 AND Req.UserID = 3 GROUP BY U.id, P.id;
+        public void GetSuggestedTrips(int userId, Action<List<CarPost>> handleData)
+        {
+            string query =
+                $"SELECT U.name, P.id, P.UserID, P.`From`, P.`To`, P.Cost, P.Departure, P.Time, P.Seats, P.Type, AVG(R.RatingNum) AS AverageRating FROM Posts AS P LEFT JOIN Requests AS Req ON Req.PostID = P.id JOIN Users AS U ON P.UserID = U.id LEFT JOIN Rating AS R ON R.EndUserID = U.id WHERE STR_TO_DATE(P.Departure, '%d/%m/%Y %H:%i:%s') >= CURDATE() AND Req.Accepted = 2 AND Req.UserID = {userId} GROUP BY U.id, P.id;";
+            List<CarPost> posts = new List<CarPost>();
+
+            ExecuteQuery(query, (reader) =>
+            {
+                while (reader.Read())
+                {
+                    var post = new CarPost
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        UserId = reader.GetInt32(reader.GetOrdinal("UserID")),
+                        Username = reader.GetString(reader.GetOrdinal("name")),
+                        From = reader.GetString(reader.GetOrdinal("From")),
+                        To = reader.GetString(reader.GetOrdinal("To")),
+                        Cost = reader.GetDecimal(reader.GetOrdinal("Cost")),
+                        Departure = DateTime.Parse(reader.GetString(reader.GetOrdinal("Departure"))),
+                        Time = reader.GetString(reader.GetOrdinal("Time")),
+                        Seats = reader.GetInt32(reader.GetOrdinal("Seats")),
+                        Type = reader.GetBoolean(reader.GetOrdinal("Type")),
+                        Rating = reader.GetInt32(reader.GetOrdinal("AverageRating")),
+                    };
+                    posts.Add(post);
+                }
+
+                handleData(posts);
+            });
+        }
+
     }
 }

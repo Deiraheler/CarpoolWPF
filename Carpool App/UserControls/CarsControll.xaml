@@ -88,6 +88,7 @@
                     <TextBlock><Run Text="Time:"/><Run Text=" "/><Run x:Name="TimeOut"/></TextBlock>
                     <TextBlock Margin="0, 20, 0, 0" HorizontalAlignment="Center">User Rating:</TextBlock>
                     <local:StarRatingControl x:Name="RatingStars" HorizontalAlignment="Center"></local:StarRatingControl>
+                    <Button Click="ButtonBase_OnClick" Background="Blue" Foreground="White" Padding="10" Content="Reserve a seat" Margin="10"></Button>
                 </StackPanel>
             </StackPanel>
         </Border>

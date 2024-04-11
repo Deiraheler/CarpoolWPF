@@ -15,11 +15,28 @@ namespace Carpool_App.Pages
     {
         public ObservableCollection<CarPost> CarPosts { get; set; } = new ObservableCollection<CarPost>();
         public ObservableCollection<Request> RequestsPosts { get; set; } = new ObservableCollection<Request>();
+        public ObservableCollection<CarPost> SuggestedPosts { get; set; } = new ObservableCollection<CarPost>();
 
         public Profile()
         {
             InitializeComponent();
+            SetUp();
+        }
 
+        private void SetUp()
+        {
+            SetDataListbox();
+
+            UserControllList.ItemsSource = CarPosts;
+            PassengerControllList.ItemsSource = RequestsPosts;
+            UserEvents.UserApprove += UserUpproved;
+
+            SetUserDataFields();
+        }
+
+        //Setting data to listboxes
+        private void SetDataListbox()
+        {
             // Get all posts from the database
             Db db = new Db();
             db.GetPostsByUserID(Store.Store.UserData.userId, (posts) =>
@@ -30,11 +47,27 @@ namespace Carpool_App.Pages
                 }
             });
 
-            UserControllList.ItemsSource = CarPosts;
-            PassengerControllList.ItemsSource = RequestsPosts;
-            UserEvents.UserApprove += UserUpproved;
+            // Get suggested trips from the database
+            db.GetSuggestedTrips(Store.Store.UserData.userId, (posts) =>
+            {
+                foreach (var post in posts)
+                {
+                    SuggestedPosts.Add(post);
+                }
+
+                SuggestedlList.ItemsSource = SuggestedPosts;
+            });
         }
 
+        //Setting user data fields
+        private void SetUserDataFields()
+        {
+            Username.Text = Store.Store.UserData.userName;
+            Email.Text = Store.Store.UserData.userEmail;
+            Password.Text = Store.Store.UserData.password;
+        }
+
+        //Go back button logic
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.GoBack();
@@ -70,6 +103,20 @@ namespace Carpool_App.Pages
 
             UserApprove userApprove = new UserApprove(request);
             userApprove.Show();
+        }
+
+        //updating user data
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            UserAuth userAuth = new UserAuth();
+            userAuth.UpdateUserData(Store.Store.UserData.userId, Username.Text, Email.Text, Password.Text);
+            MessageBox.Show("Data updated successfully");
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            UserEvents.RaiseUserLogOut(sender, new UserEventArgs());
+            NavigationService.Navigate(new MainPage());
         }
     }
 }

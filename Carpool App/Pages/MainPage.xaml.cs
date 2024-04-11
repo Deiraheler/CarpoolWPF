@@ -109,6 +109,9 @@ namespace Carpool_App.Pages
             ButtonGrid.Width = new GridLength(80);
             LogInBtn.Content = "Log In";
             UI.UI.ToggleVisibility(AddButton);
+            LogInBtn.Click -= OpenProfilePage;
+            LogInBtn.Click += Button_LogIn;
+            Store.Store.UserData = null;
         }
 
         private void OpenProfilePage(object sender, RoutedEventArgs e)

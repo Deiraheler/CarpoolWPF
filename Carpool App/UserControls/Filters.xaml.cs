@@ -31,6 +31,7 @@ namespace Carpool_App.UserControls
             this.Loaded += UserControl_Loaded;
         }
 
+        //Toggle Filter Block Visibility
         private void btnFilter_Click(object sender, RoutedEventArgs e)
         {
             if (ToggleFilterBlock.Visibility == Visibility.Visible)
@@ -43,6 +44,7 @@ namespace Carpool_App.UserControls
             }
         }
 
+        //Load all cities from database to ComboBoxes
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             // Get all cities from database
@@ -65,6 +67,7 @@ namespace Carpool_App.UserControls
 
         private void cmbFrom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            cmbTo.SelectedIndex = -1;
             ComboBox fromBox = sender as ComboBox;
             if (fromBox.SelectedIndex != -1)
             {
@@ -109,6 +112,7 @@ namespace Carpool_App.UserControls
 
         private void cmbDate_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            cmbTime.SelectedIndex = -1;
             if (cmbDate.SelectedIndex != -1)
             {
                 Dispatcher.Invoke(() =>

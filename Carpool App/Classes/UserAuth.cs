@@ -115,5 +115,12 @@ namespace Carpool_App.Classes
             });
             return rating;
         }
+
+        // Update user data
+        public void UpdateUserData(int userId, string username, string email, string password)
+        {
+            string query = $"UPDATE Users SET name = '{username}', email = '{email}', password = '{password}' WHERE id = {userId}";
+            ExecuteQuery(query, (reader) => { });
+        }
     }
 }
