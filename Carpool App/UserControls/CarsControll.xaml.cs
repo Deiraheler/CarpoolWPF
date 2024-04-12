@@ -123,6 +123,7 @@ namespace Carpool_App.UserControls
                 }
                 Db db = new Db();
                 db.AddRequest(SelectedCarPost.Id, 0);
+                MessageBox.Show("Request sent", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {

@@ -38,7 +38,22 @@ namespace Carpool_App.Classes
                 }
                 catch (MySqlException ex)
                 {
-                    MessageBox.Show("An error occurred: " + ex.Message);
+                    if (ex.Number == 1062) // Duplicate entry
+                    {
+                        MessageBox.Show("This request already exists.");
+                    }
+                    else if (ex.Number == 1452) // Foreign key constraint fails
+                    {
+                        MessageBox.Show("No corresponding post or user found.");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Database error: {ex.Message}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An unexpected error occurred: {ex.Message}");
                 }
             }
         }
@@ -265,10 +280,12 @@ namespace Carpool_App.Classes
             });
         }
 
-        public void AddRequest(int postId, short type)
+        public void AddRequest(int postId, short accepted)
         {
-            string query = $"INSERT INTO Requests (`UserID`, `PostID`, `Type`) VALUES ('{Store.Store.UserData.userId}', '{postId}', '{type}');";
-            ExecuteQuery(query, (reader) => { });
+            string query = $"INSERT INTO Requests (`UserID`, `PostID`, `Accepted`) VALUES ('{Store.Store.UserData.userId}', '{postId}', '{accepted}');";
+            ExecuteQuery(query, (reader) =>
+            {
+            });
         }
 
         // Method to approve a user
